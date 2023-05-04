@@ -6,7 +6,7 @@ namespace SNET_CaseStudy.Business
     {
         IResult Add(Customer customer);
         IResult GetById(int customerId);
-        List<Customer> GetByFilter();
+        List<Customer> GetByFilter(Customer customer);
         IResult Delete(long customerId);
     }
 }
