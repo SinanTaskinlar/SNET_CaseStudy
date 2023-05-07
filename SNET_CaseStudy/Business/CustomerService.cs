@@ -1,28 +1,39 @@
-﻿using SNET_CaseStudy.Entities;
+﻿
+using SNET_CaseStudy.DataAccess;
+using SNET_CaseStudy.Entities;
 
 namespace SNET_CaseStudy.Business
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerDataAccess _customerDataAccess;
-        private readonly ICustomerService _customerService;
-        public IResult Add(Customer customer)
+        private readonly ICustomerDal _customerDataAccess;
+
+        public CustomerService(ICustomerDal customerDal)
         {
-            throw new NotImplementedException();
+            _customerDataAccess = customerDal ?? throw new ArgumentNullException(nameof(customerDal));
         }
 
-        public IResult Delete(long customerId)
+        //[ValidationAspect(typeof(ProductValidator))]
+        public bool Add(Customer customer)
         {
-            throw new NotImplementedException();
+            return _customerDataAccess.Add(customer);
         }
 
-        public List<Customer> GetByFilter()
+        public bool Delete(Customer customer)
         {
-            throw new NotImplementedException();
+            return _customerDataAccess.Delete(customer);
         }
 
-        public IResult GetById(int customerId)
+        public List<Customer> GetCustomerListByFilter(Customer customer)
         {
+            throw new NotImplementedException();
+            //return new List<Customer>(_customerDataAccess.GetAll());
+        }
+
+        public Customer GetCustomer(Customer customer)
+        {
+            //ad soyad ve ya tckn filtresi eklenecek
+            //_customerDataAccess.GetAll();
             throw new NotImplementedException();
         }
     }
