@@ -1,12 +1,15 @@
-﻿using Core.DataAccess;
-using SNET_CaseStudy.Entities;
+﻿using SNET_CaseStudy.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess.Abstract
+namespace SNET_CaseStudy.DataAccess
 {
-    public interface ICustomerDal:IEntityRepository<Customer>
+    public interface ICustomerDal
     {
+        bool Add(Customer customer);
+        Customer GetCustomer(Customer customer);
+        List<Customer> GetCustomerListByFilter(Customer customer);
+        bool Delete(Customer customer);
     }
 }

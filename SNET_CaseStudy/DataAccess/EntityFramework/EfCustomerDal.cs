@@ -1,28 +1,52 @@
-﻿using Core.DataAccess.EntityFramework;
-using DataAccess.Abstract;
+﻿
+using Microsoft.EntityFrameworkCore;
 using SNET_CaseStudy.DataAccess.Context;
 using SNET_CaseStudy.Entities;
 
 namespace SNET_CaseStudy.DataAccess.EntityFramework
 {
-    public class EfCustomerDal : EfEntityRepositoryBase<Customer, ProjectContext>, ICustomerDal
+    public class EfCustomerDal : ICustomerDal
     {
-        //public List<ProductDetailDto> GetProductDetails()
-        //{
-        //    using (ProjectContext context = new ProjectContext())
-        //    {
-        //        var result = from p in context.Products
-        //                     join c in context.Categories
-        //                     on p.CategoryId equals c.CategoryId
-        //                     select new ProductDetailDto
-        //                     {
-        //                         ProductId = p.ProductId,
-        //                         ProductName = p.ProductName,
-        //                         CategoryName = c.CategoryName,
-        //                         UnitsInStock = p.UnitsInStock
-        //                     };
-        //        return result.ToList();
-        //    }
-        //}
+        public Customer GetCustomer(Customer customer)
+        {
+            using ProjectContext context = new();
+            var result = from p in context.Customers
+                         select new Customer
+                         {
+                             TCKN = p.TCKN
+                         };
+            return result.First();
+        }
+
+        public List<Customer> GetCustomerListByFilter(Customer customer)
+        {
+            using ProjectContext context = new();
+            var result = from p in context.Customers
+                         select new Customer
+                         {
+                             Name = p.Name,
+                             Surname = p.Surname,
+                             TCKN = p.TCKN
+                         };
+            return result.ToList();
+        }
+
+        bool ICustomerDal.Add(Customer customer)
+        {
+            using ProjectContext context = new();
+            var addedEntity = context.Entry(customer);
+            addedEntity.State = EntityState.Added;
+            context.SaveChanges();
+            return true;
+        }
+
+        bool ICustomerDal.Delete(Customer customer)
+        {
+            using ProjectContext context = new();
+            var deletedEntity = context.Entry(customer);
+            deletedEntity.State = EntityState.Deleted;
+            context.SaveChanges();
+            return true;
+        }
     }
 }
