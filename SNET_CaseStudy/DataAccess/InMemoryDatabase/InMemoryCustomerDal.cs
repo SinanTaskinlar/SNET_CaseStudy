@@ -1,16 +1,25 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using SNET_CaseStudy.DataAccess.Context;
+﻿using SNET_CaseStudy.DataAccess.Context;
 using SNET_CaseStudy.Entities;
 
-namespace SNET_CaseStudy.DataAccess.EntityFramework
+namespace SNET_CaseStudy.DataAccess.InMemoryDatabase
 {
-    public class EfCustomerDal : ICustomerDal
+    public class InMemoryCustomerDal : ICustomerDal
     {
+        List<Customer> _customers;
+        public InMemoryCustomerDal()
+        {
+            _customers = new List<Customer> { };
+        }
+
+        public bool Add(Customer customer)
+        {
+            _customers.Add(customer);
+            return true;
+        }
+
         public Customer GetCustomer(long customerTCKN)
         {
-            using ProjectContext context = new();
-            var result = from p in context.Customers
+            var result = from p in _customers
                          where p.TCKN == customerTCKN
                          select new Customer
                          {
@@ -24,11 +33,12 @@ namespace SNET_CaseStudy.DataAccess.EntityFramework
 
         public List<Customer> GetCustomerListByFilter(Customer customer)
         {
-            using ProjectContext context = new();
-            var result = from p in context.Customers
+
+            var result = from p in _customers
                          where p.Name == customer.Name &&
                                 p.Surname == customer.Surname &&
-                                p.TCKN == customer.TCKN
+                                p.TCKN == customer.TCKN &&
+                                p.IsActive == true
                          select new Customer
                          {
                              Name = p.Name,
@@ -38,21 +48,10 @@ namespace SNET_CaseStudy.DataAccess.EntityFramework
             return result.ToList();
         }
 
-        bool ICustomerDal.Add(Customer customer)
+        public bool SetCustomerStatusPassive(Customer customer)
         {
-            using ProjectContext context = new();
-            var addedEntity = context.Entry(customer);
-            addedEntity.State = EntityState.Added;
-            context.SaveChanges();
-            return true;
-        }
-
-        bool ICustomerDal.SetCustomerStatusPassive(Customer customer)
-        {
-            using ProjectContext context = new();
-            var updatedEntity = context.Entry(customer);
-            updatedEntity.State = EntityState.Modified;
-            context.SaveChanges();
+            var index = _customers.FindIndex(x => x.TCKN.Equals(customer.TCKN));
+            _customers[index].IsActive = false;
             return true;
         }
     }

@@ -4,9 +4,9 @@ namespace SNET_CaseStudy.Business
 {
     public interface ICustomerService
     {
-        bool Add(Customer customer);
-        Customer GetCustomer(Customer customer);
-        List<Customer> GetCustomerListByFilter(Customer customer);
-        bool Delete(Customer customer);
+        bool Add(CustomerDto customer);
+        CustomerDto GetCustomer(string customerTCKN);
+        List<CustomerDto> GetCustomerListByFilter(CustomerDto customer);
+        bool SetCustomerStatusPassive(string customerTCKN);
     }
 }
